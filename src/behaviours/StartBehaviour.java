@@ -32,7 +32,7 @@ public class StartBehaviour extends SimpleBehaviour {
 	public StartBehaviour() {
 		super();
 		this.isInitialized = false;
-		this.experimentMasterMT = MessageTemplate.and(MessageTemplate.MatchSender(new AID("JudgeAgent", AID.ISLOCALNAME)),
+		this.experimentMasterMT = MessageTemplate.and(MessageTemplate.MatchSender(new AID("EMA", AID.ISLOCALNAME)),
 				MessageTemplate.MatchConversationId("start"));
 		this.pattern = Pattern.compile("(\\d+);(\\d+)"); // "startTime;numLaps"
 	}
@@ -62,7 +62,6 @@ public class StartBehaviour extends SimpleBehaviour {
 						int step = 1;
 						logger.info(myAgent.getLocalName() + ":START RUNNING!");
 						Behaviour runnerBehaviour = new RunnerBehaviour(step);
-						((RunnerAgent) myAgent).setRunnerBehaviour(runnerBehaviour);// local runner agent start running
 						myAgent.addBehaviour(runnerBehaviour);// representative start running
 					}
 				}, startTime);

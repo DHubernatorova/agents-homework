@@ -13,9 +13,7 @@ import util.AgentsUtils;
  * ExperimentBehaviour is used by ExperimentMasterAgent to run the experiment.
  * 
  * Parameters:
- * 1. numAttempts: total number of attempts to run.
- * 2. initLaps: number of laps in first attempt.
- * 3. step: number of laps to increase in each attempt.
+ * numLaps: number of laps.
  */
 public class ExperimentBehaviour extends SimpleBehaviour {
 
@@ -30,18 +28,14 @@ public class ExperimentBehaviour extends SimpleBehaviour {
 	private long startTime;
 	private long endTime;
 	private int numLaps;
-	private int attempt;
-	private int numMaxAttempts;
-	private int step;
 	private MessageTemplate startMT;
 	private MessageTemplate compMT;
 	private int teamsConfirmed;
+	private boolean teamsCompleted;
 
-	public ExperimentBehaviour(int numAttempts, int initLaps, int step) {
-		this.attempt = 1;
+	public ExperimentBehaviour(int initLaps) {
 		this.numLaps = initLaps;
-		this.numMaxAttempts = numAttempts;
-		this.step = step;
+		this.teamsCompleted = false;
 		this.startMT = MessageTemplate.MatchConversationId("start");
 		this.compMT = MessageTemplate.MatchConversationId("completion");
 	}
@@ -96,13 +90,11 @@ public class ExperimentBehaviour extends SimpleBehaviour {
 		logger.info("Number of teams: " + numTeams);
 		logger.info("Number of laps: " + numLaps);
 		logger.info("Runtime: " + (endTime - startTime));
-		// Update variables
-		numLaps += step;
-		attempt++;
+		teamsCompleted = true;
 	}
 
 	@Override
 	public boolean done() {
-		return attempt > numMaxAttempts;
+		return teamsCompleted;
 	}
 }

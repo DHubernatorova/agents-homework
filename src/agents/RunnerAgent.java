@@ -32,7 +32,6 @@ public class RunnerAgent extends Agent {
 	private final Logger logger = Logger.getMyLogger(getClass().getName());
 	private static final long serialVersionUID = 7941245165294941476L;
 
-	private Behaviour runnerBehaviour;
 	private boolean isRepresentative;
 	private String targetAgent;
 	private String originLocation;
@@ -100,13 +99,8 @@ public class RunnerAgent extends Agent {
 					// Send completion message to Experiment master and finish
 					ACLMessage compMsg = new ACLMessage(ACLMessage.INFORM);
 					compMsg.setConversationId("completion");
-					compMsg.addReceiver(new AID("ExperimentMasterAgent", AID.ISLOCALNAME));
+					compMsg.addReceiver(new AID("EMA", AID.ISLOCALNAME));
 					send(compMsg);
-					// Restart behaviors (Remove RunnerBehaviour and add StartBehaviour)
-					// start once again
-					originLocation = newLocation;
-					removeBehaviour(runnerBehaviour);
-					addBehaviour(new StartBehaviour());
 					return;
 				}
 			}
@@ -137,7 +131,7 @@ public class RunnerAgent extends Agent {
 			agents = AMSService.search(this, new AMSAgentDescription(), sC);	
 			for (int i = 0; i < agents.length; i++) {
 				if (agents[i].getName().getLocalName().equals(targetAgent))
-					return agents[i].getName();
+					return new AID(targetAgent, AID.ISLOCALNAME);
 			}
 		} catch (FIPAException e) {
 			e.printStackTrace();
@@ -148,9 +142,5 @@ public class RunnerAgent extends Agent {
 
 	public void setNumOfLaps(int num) {
 		this.numLaps = num;
-	}
-
-	public void setRunnerBehaviour(Behaviour b) {
-		this.runnerBehaviour = b;
 	}
 }
